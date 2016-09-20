@@ -196,9 +196,9 @@ canvas.texturePixelated {
     width: 100%;
 }
 
-/* Only show controls on small screens */
-@media screen and (min-width:600px){
-    .touch-controls{
+/* Only show controls on portrait mode screens */
+@media screen and (min-aspect-ratio: 3/4) {
+	  .touch-controls{
         display: none;
     }
 }
