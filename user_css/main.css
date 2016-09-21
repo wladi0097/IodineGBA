@@ -136,6 +136,10 @@ div#menu {
     z-index: 1;
 }
 
+li.hide {
+    display: none !important;
+}
+
 /* bottom level nav */
 .menu ul ul{
     top:0;
