@@ -130,7 +130,7 @@ div#menu {
     position: absolute;
     top:100%;
     left:0;
-    background: whitesmoke;
+    background-color: rgb(245, 245, 245);
     box-shadow: 0 5px 10px 0 rgba(0,0,0,.1);
     transition: .3s ease;
     z-index: 1;
@@ -146,10 +146,17 @@ li.hide {
     left: 100%;
 }
 
+#menu_top li {
+    padding: .7em 1em;
+}
+
+.menu ul li {
+    padding: .3em 1em !important;
+}
+
 .menu li{
     white-space: nowrap;
     position: relative;
-    padding: .7em 1em;
     cursor:pointer;
 }
 

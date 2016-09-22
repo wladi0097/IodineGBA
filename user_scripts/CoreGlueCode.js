@@ -16,6 +16,7 @@ var IodineGUI = {
     toMap:null,
     toMapIndice:0,
     suspended:false,
+    isPlaying:false,
     startTime:(+(new Date()).getTime()),
     mixerInput:null,
     defaults:{
@@ -38,9 +39,9 @@ var IodineGUI = {
             //Start:
             13,
             //Right:
-            39,
+            83,
             //Left:
-            37,
+            65,
             //Up:
             38,
             //Down:
@@ -63,7 +64,11 @@ var IodineGUI = {
             //Reset Speed:
             53,
             //Toggle Fullscreen:
-            54
+            54,
+            //Play/Pause:
+            80,
+            //Restart:
+            82
         ]
     }
 };

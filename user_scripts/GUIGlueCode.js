@@ -190,6 +190,14 @@ function registerGUIEvents() {
         IodineGUI.toMap = IodineGUI.defaults.keyZonesControl;
         IodineGUI.toMapIndice = 5;
     });
+    addEvent("click", document.getElementById("key_playpause"), function () {
+        IodineGUI.toMap = IodineGUI.defaults.keyZonesControl;
+        IodineGUI.toMapIndice = 6;
+    });
+    addEvent("click", document.getElementById("key_restart"), function () {
+        IodineGUI.toMap = IodineGUI.defaults.keyZonesControl;
+        IodineGUI.toMapIndice = 7;
+    });
     addEvent("change", document.getElementById("import"), function (e) {
              if (typeof this.files != "undefined") {
                 try {
@@ -404,6 +412,18 @@ function registerDefaultSettings() {
     else {
         IodineGUI.defaults.keyZonesControl[5] = findValue("key_fullscreen");
     }
+    if (findValue("key_playpause") === null) {
+        setValue("key_playpause", IodineGUI.defaults.keyZonesControl[6] | 0);
+    }
+    else {
+        IodineGUI.defaults.keyZonesControl[6] = findValue("key_playpause");
+    }
+    if (findValue("key_restart") === null) {
+        setValue("key_restart", IodineGUI.defaults.keyZonesControl[7] | 0);
+    }
+    else {
+        IodineGUI.defaults.keyZonesControl[7] = findValue("key_restart");
+    }
 }
 function saveKeyBindings() {
     setValue("key_a", IodineGUI.defaults.keyZonesGBA[0] | 0);
@@ -422,6 +442,8 @@ function saveKeyBindings() {
     setValue("key_slowdown", IodineGUI.defaults.keyZonesControl[3] | 0);
     setValue("key_speedreset", IodineGUI.defaults.keyZonesControl[4] | 0);
     setValue("key_fullscreen", IodineGUI.defaults.keyZonesControl[5] | 0);
+    setValue("key_playpause", IodineGUI.defaults.keyZonesControl[6] | 0);
+    setValue("key_restart", IodineGUI.defaults.keyZonesControl[7] | 0);
 }
 function registerGUISettings() {
     document.getElementById("sound").checked = IodineGUI.defaults.sound;
@@ -460,6 +482,7 @@ function updatePlayButton(isPlaying) {
         if (!IodineGUI.coreTimerID) {
             initTimer();
         }
+        IodineGUI.isPlaying = true;
     }
     else {
         document.getElementById("pause").className = "hide";
@@ -469,6 +492,7 @@ function updatePlayButton(isPlaying) {
             clearInterval(IodineGUI.coreTimerID);
             IodineGUI.coreTimerID = null;
         }
+        IodineGUI.isPlaying = false;
     }
 }
 function visibilityChangeHandle() {

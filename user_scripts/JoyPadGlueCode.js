@@ -31,7 +31,7 @@ function keyUpGBA(keyCode) {
 }
 function keyUp(keyCode) {
     keyCode = keyCode | 0;
-    for (var keyMapIndex = 0; (keyMapIndex | 0) < 6; keyMapIndex = ((keyMapIndex | 0) + 1) | 0) {
+    for (var keyMapIndex = 0; (keyMapIndex | 0) < 8; keyMapIndex = ((keyMapIndex | 0) + 1) | 0) {
         if ((IodineGUI.defaults.keyZonesControl[keyMapIndex | 0] | 0) == (keyCode | 0)) {
             keyboardEmulatorControl(keyMapIndex | 0);
             return true;
@@ -76,6 +76,12 @@ function keyboardEmulatorControl(keyCode) {
             break;
         case 5:
             toggleFullScreen();
+            break;
+        case 6:
+            togglePlayState();
+            break;
+        case 7:
+            IodineGUI.Iodine.restart();
     }
 }
 function toggleFullScreen() {
@@ -106,5 +112,13 @@ function toggleFullScreen() {
         else if (document.webkitExitFullscreen) {
             document.webkitExitFullscreen();
         }
+    }
 }
+function togglePlayState() {
+    if (IodineGUI.isPlaying) {
+        IodineGUI.Iodine.pause();
+    }
+    else {
+        IodineGUI.Iodine.play();
+    }
 }
