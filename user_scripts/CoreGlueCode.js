@@ -39,17 +39,17 @@ var IodineGUI = {
             //Start:
             13,
             //Right:
-            83,
+            39,
             //Left:
-            65,
+            37,
             //Up:
             38,
             //Down:
             40,
             //R:
-            50,
+            83,
             //L:
-            49
+            65
         ],
         keyZonesControl:[
             //Use this to control the emulator function key mapping:
