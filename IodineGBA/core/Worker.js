@@ -71,7 +71,12 @@ var timestamp = getSharedUint32Array(1);
 var timerHandle = null;
 var timerRate = 0;
 //Pass the shared array buffers:
-postMessage({messageID:0, gfxBuffer1:gfxBuffers[0], gfxBuffer2:gfxBuffers[1], gfxCounters:gfxCounters, audioCounters:audioCounters, timestamp:timestamp}, [gfxBuffers[0].buffer, gfxBuffers[1].buffer, gfxCounters.buffer, audioCounters.buffer, timestamp.buffer]);
+try {
+    postMessage({messageID:0, gfxBuffer1:gfxBuffers[0], gfxBuffer2:gfxBuffers[1], gfxCounters:gfxCounters, audioCounters:audioCounters, timestamp:timestamp}, [gfxBuffers[0].buffer, gfxBuffers[1].buffer, gfxCounters.buffer, audioCounters.buffer, timestamp.buffer]);
+}
+catch (e) {
+    postMessage({messageID:0, gfxBuffer1:gfxBuffers[0], gfxBuffer2:gfxBuffers[1], gfxCounters:gfxCounters, audioCounters:audioCounters, timestamp:timestamp});
+}
 //Event decoding:
 self.onmessage = function (event) {
     var data = event.data;
@@ -187,7 +192,12 @@ var audioHandler = {
         //Only regen the buffer if we need to make it bigger:
         if (!audioBuffer || (audioBufferSize | 0) > (audioBuffer.length | 0)) {
             audioBuffer = getSharedFloat32Array(audioBufferSize | 0);
-            postMessage({messageID:1, audioBuffer:audioBuffer}, [audioBuffer.buffer]);
+            try {
+               postMessage({messageID:1, audioBuffer:audioBuffer}, [audioBuffer.buffer]); 
+            }
+            catch (e) {
+                postMessage({messageID:1, audioBuffer:audioBuffer});
+            }
         }
         postMessage({messageID:2, channels:channels | 0, sampleRate:+sampleRate, bufferLimit:bufferLimit | 0});
     },

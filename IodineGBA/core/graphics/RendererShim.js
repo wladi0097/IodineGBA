@@ -103,27 +103,46 @@
      });
  }
 GameBoyAdvanceGraphicsRendererShim.prototype.shareStaticBuffers = function () {
-     this.worker.postMessage({
-         messageID:0,
-         gfxBuffers:gfxBuffers,
-         gfxCounters:gfxCounters,
-         gfxLineCounter:this.gfxLineCounter
-     }, [
-         gfxBuffers[0].buffer,
-         gfxBuffers[1].buffer,
-         gfxCounters.buffer,
-         this.gfxLineCounter.buffer
-     ]);
+    try {
+        this.worker.postMessage({
+            messageID:0,
+            gfxBuffers:gfxBuffers,
+            gfxCounters:gfxCounters,
+            gfxLineCounter:this.gfxLineCounter
+        }, [
+            gfxBuffers[0].buffer,
+            gfxBuffers[1].buffer,
+            gfxCounters.buffer,
+            this.gfxLineCounter.buffer
+        ]);
+    }
+    catch (e) {
+        this.worker.postMessage({
+            messageID:0,
+            gfxBuffers:gfxBuffers,
+            gfxCounters:gfxCounters,
+            gfxLineCounter:this.gfxLineCounter
+        });
+    }
 }
 GameBoyAdvanceGraphicsRendererShim.prototype.shareDynamicBuffers = function () {
-     this.worker.postMessage({
-         messageID:2,
-         gfxCommandBuffer:this.gfxCommandBuffer,
-         gfxCommandCounters:this.gfxCommandCounters
-     }, [
-         this.gfxCommandBuffer.buffer,
-         this.gfxCommandCounters.buffer
-     ]);
+    try {
+        this.worker.postMessage({
+            messageID:2,
+            gfxCommandBuffer:this.gfxCommandBuffer,
+            gfxCommandCounters:this.gfxCommandCounters
+            }, [
+            this.gfxCommandBuffer.buffer,
+            this.gfxCommandCounters.buffer
+        ]);
+    }
+    catch (e) {
+        this.worker.postMessage({
+            messageID:2,
+            gfxCommandBuffer:this.gfxCommandBuffer,
+            gfxCommandCounters:this.gfxCommandCounters
+        });
+    }
      //Wake up the producer "GPU" thread:
      Atomics.wake(gfxCounters, 2, 1);
 }
