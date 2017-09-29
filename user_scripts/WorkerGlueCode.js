@@ -20,6 +20,7 @@ function IodineGBAWorkerShim() {
     this.gfxCounters = null;
     this.audioBuffer = null;
     this.audioCounters = null;
+    this.audioSamplesRemaining = null;
     this.audioBufferSize = 0;
     this.audioBufferSizeMask = 0;
     this.audioInitialized = false;
@@ -151,37 +152,34 @@ IodineGBAWorkerShim.prototype.attachSaveImportHandler = function (saveImport) {
 IodineGBAWorkerShim.prototype.decodeMessage = function (data) {
     switch (data.messageID | 0) {
         case 0:
-            this.buffersInitialize(data.gfxBuffer1, data.gfxBuffer2, data.gfxCounters, data.audioCounters, data.timestamp);
+            this.buffersInitialize(data.gfxBuffer1, data.gfxBuffer2, data.gfxCounters, data.audioSamplesRemaining, data.timestamp);
             break;
         case 1:
-            this.audioBufferPush(data.audioBuffer);
+            this.audioInitialize(data.channels | 0, +data.sampleRate, data.bufferLimit | 0, data.audioBuffer, data.audioCounters);
             break;
         case 2:
-            this.audioInitialize(data.channels | 0, +data.sampleRate, data.bufferLimit | 0);
-            break;
-        case 3:
             this.audioRegister();
             break;
-        case 4:
+        case 3:
             this.audioUnregister();
             break;
-        case 5:
+        case 4:
             this.audioSetBufferSpace(data.audioBufferContainAmount | 0);
             break;
-        case 6:
+        case 5:
             this.saveImportRequest(data.saveID);
             break;
-        case 7:
+        case 6:
             this.saveExportRequest(data.saveID, data.saveData);
             break;
-        case 8:
+        case 7:
             this.speedPush(+data.speed);
 			break;
 		default:
 			this.issuePlayStatus(data.playing | 0);
     }
 }
-IodineGBAWorkerShim.prototype.audioInitialize = function (channels, sampleRate, bufferLimit) {
+IodineGBAWorkerShim.prototype.audioInitialize = function (channels, sampleRate, bufferLimit, audioBuffer, audioCounters) {
     channels = channels | 0;
     sampleRate = +sampleRate;
     bufferLimit = bufferLimit | 0;
@@ -200,10 +198,9 @@ IodineGBAWorkerShim.prototype.audioInitialize = function (channels, sampleRate, 
         });
         this.audioInitialized = true;
     }
-}
-IodineGBAWorkerShim.prototype.audioBufferPush = function (audioBuffer) {
     //Grab the new buffer:
     this.audioBuffer = audioBuffer;
+    this.audioCounters = audioCounters;
     this.audioBufferSize = audioBuffer.length | 0;
     this.audioBufferSizeMask = ((this.audioBufferSize | 0) - 1) | 0;
 }
@@ -252,7 +249,7 @@ IodineGBAWorkerShim.prototype.copyAudioBuffer = function (start, end) {
 }
 IodineGBAWorkerShim.prototype.audioPostHeartBeat = function () {
     //Push latest audio metrics with no buffering:
-    this.audioCounters[2] = this.audio.remainingBuffer() | 0;
+    this.audioSamplesRemaining[0] = this.audio.remainingBuffer() | 0;
 }
 IodineGBAWorkerShim.prototype.graphicsHeartBeat = function () {
     //If graphics callback handle provided and we got a buffer reference:
@@ -301,10 +298,10 @@ IodineGBAWorkerShim.prototype.audioSetBufferSpace = function (bufferSpace) {
         this.audio.setBufferSpace(bufferSpace | 0);
     }
 }
-IodineGBAWorkerShim.prototype.buffersInitialize = function (gfxBuffer1, gfxBuffer2, gfxCounters, audioCounters, timestamp) {
+IodineGBAWorkerShim.prototype.buffersInitialize = function (gfxBuffer1, gfxBuffer2, gfxCounters, audioSamplesRemaining, timestamp) {
     this.gfxBuffers = [gfxBuffer1, gfxBuffer2];
     this.gfxCounters = gfxCounters;
-    this.audioCounters = audioCounters;
+    this.audioSamplesRemaining = audioSamplesRemaining;
     this.timestamp = timestamp;
 }
 IodineGBAWorkerShim.prototype.speedPush = function (speed) {

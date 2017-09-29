@@ -62,9 +62,10 @@ var gfxBuffers = [getSharedUint8Array(160 * 240 * 3),
 var gfxCounters = getSharedInt32Array(3);
 //Audio Buffers:
 var audioBuffer = null;
+var audioCounters = null;
 var audioBufferSize = 0;
 var audioBufferSizeMask = 0;
-var audioCounters = getSharedInt32Array(3);
+var audioSamplesRemaining = getSharedInt32Array(1);
 //Time Stamp tracking:
 var timestamp = getSharedUint32Array(1);
 //Interval Timer handle:
@@ -72,10 +73,10 @@ var timerHandle = null;
 var timerRate = 0;
 //Pass the shared array buffers:
 try {
-    postMessage({messageID:0, gfxBuffer1:gfxBuffers[0], gfxBuffer2:gfxBuffers[1], gfxCounters:gfxCounters, audioCounters:audioCounters, timestamp:timestamp}, [gfxBuffers[0].buffer, gfxBuffers[1].buffer, gfxCounters.buffer, audioCounters.buffer, timestamp.buffer]);
+    postMessage({messageID:0, gfxBuffer1:gfxBuffers[0], gfxBuffer2:gfxBuffers[1], gfxCounters:gfxCounters, audioSamplesRemaining:audioSamplesRemaining, timestamp:timestamp}, [gfxBuffers[0].buffer, gfxBuffers[1].buffer, gfxCounters.buffer, audioSamplesRemaining.buffer, timestamp.buffer]);
 }
 catch (e) {
-    postMessage({messageID:0, gfxBuffer1:gfxBuffers[0], gfxBuffer2:gfxBuffers[1], gfxCounters:gfxCounters, audioCounters:audioCounters, timestamp:timestamp});
+    postMessage({messageID:0, gfxBuffer1:gfxBuffers[0], gfxBuffer2:gfxBuffers[1], gfxCounters:gfxCounters, audioSamplesRemaining:audioSamplesRemaining, timestamp:timestamp});
 }
 //Event decoding:
 self.onmessage = function (event) {
@@ -189,17 +190,14 @@ var audioHandler = {
             audioBufferSizeMask = (audioBufferSizeMask << 1) | 1;
         }
         audioBufferSize = ((audioBufferSizeMask | 0) + 1) | 0;
-        //Only regen the buffer if we need to make it bigger:
-        if (!audioBuffer || (audioBufferSize | 0) > (audioBuffer.length | 0)) {
-            audioBuffer = getSharedFloat32Array(audioBufferSize | 0);
-            try {
-               postMessage({messageID:1, audioBuffer:audioBuffer}, [audioBuffer.buffer]); 
-            }
-            catch (e) {
-                postMessage({messageID:1, audioBuffer:audioBuffer});
-            }
+        audioBuffer = getSharedFloat32Array(audioBufferSize | 0);
+        audioCounters = getSharedInt32Array(2);
+        try {
+            postMessage({messageID:1, channels:channels | 0, sampleRate:+sampleRate, bufferLimit:bufferLimit | 0, audioBuffer:audioBuffer, audioCounters:audioCounters}, [audioBuffer.buffer, audioCounters.buffer]); 
         }
-        postMessage({messageID:2, channels:channels | 0, sampleRate:+sampleRate, bufferLimit:bufferLimit | 0});
+        catch (e) {
+            postMessage({messageID:1, channels:channels | 0, sampleRate:+sampleRate, bufferLimit:bufferLimit | 0, audioBuffer:audioBuffer, audioCounters:audioCounters});
+        }
     },
     push:function (buffer, startPos, endPos) {
         startPos = startPos | 0;
@@ -229,20 +227,20 @@ var audioHandler = {
     },
     register:function () {
         //Register into the audio mixer:
-        postMessage({messageID:3});
+        postMessage({messageID:2});
     },
     unregister:function () {
         //Unregister from audio mixer:
-        postMessage({messageID:4});
+        postMessage({messageID:3});
     },
     setBufferSpace:function (spaceContain) {
         //Ensure buffering minimum levels for the audio:
-        postMessage({messageID:5, audioBufferContainAmount:spaceContain | 0});
+        postMessage({messageID:4, audioBufferContainAmount:spaceContain | 0});
     },
     remainingBuffer:function () {
         //Report the amount of audio samples in-flight:
         var ringBufferCount = this.remainingBufferShared() | 0;
-        var audioSysCount = audioCounters[2] | 0;
+        var audioSysCount = audioSamplesRemaining[0] | 0;
         return ((ringBufferCount | 0) + (audioSysCount | 0)) | 0;
     },
     remainingBufferShared:function () {
@@ -254,14 +252,14 @@ var audioHandler = {
     }
 };
 function saveImportHandler(saveID, saveCallback, noSaveCallback) {
-    postMessage({messageID:6, saveID:saveID});
+    postMessage({messageID:5, saveID:saveID});
     saveImportPool.push([saveCallback, noSaveCallback]);
 }
 function saveExportHandler(saveID, saveData) {
-    postMessage({messageID:7, saveID:saveID, saveData:saveData});
+    postMessage({messageID:6, saveID:saveID, saveData:saveData});
 }
 function speedHandler(speed) {
-    postMessage({messageID:8, speed:speed});
+    postMessage({messageID:7, speed:speed});
 }
 function processSaveImportSuccess(saveData) {
     saveImportPool.shift()[0](saveData);
@@ -271,7 +269,7 @@ function processSaveImportFail() {
 }
 function playStatusHandler(isPlaying) {
     isPlaying = isPlaying | 0;
-    postMessage({messageID:9, playing:(isPlaying | 0)});
+    postMessage({messageID:8, playing:(isPlaying | 0)});
     if ((isPlaying | 0) == 0) {
         if (timerHandle) {
             clearInterval(timerHandle);
