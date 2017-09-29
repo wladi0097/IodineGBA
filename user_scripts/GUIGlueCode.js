@@ -56,15 +56,8 @@ function registerGUIEvents() {
         setValue("toggleOffthreadCPU", !!this.checked);
         //Can't do anything until reload of page.
     });
-    addEvent("click", document.getElementById("speedup"), function () {
-        IodineGUI.Iodine.incrementSpeed(0.05);
-    });
-    addEvent("click", document.getElementById("speeddown"), function () {
-        IodineGUI.Iodine.incrementSpeed(-0.05);
-    });
-    addEvent("click", document.getElementById("speedreset"), function () {
-        IodineGUI.Iodine.setSpeed(1);
-    });
+    addEvent("change", document.getElementById("speedset"), speedChangeFunc);
+    addEvent("input", document.getElementById("speedset"), speedChangeFunc);
     addEvent("click", document.getElementById("fullscreen"), toggleFullScreen);
     addEvent("click", document.getElementById("key_a"), function () {
         IodineGUI.toMap = IodineGUI.defaults.keyZonesGBA;
@@ -251,8 +244,11 @@ function registerGUIEvents() {
     addEvent("click", document.getElementById("export"), refreshStorageListing);
     addEvent("unload", window, ExportSave);
     IodineGUI.Iodine.attachSpeedHandler(function (speed) {
-        var speedDOM = document.getElementById("speed");
-        speedDOM.textContent = "Speed: " + speed.toFixed(2) + "%";
+        speed = speed.toFixed(2);
+        if (speed != IodineGUI.currentSpeed[1]) {
+            IodineGUI.currentSpeed[1] = speed;
+            IodineGUI.currentSpeed[0] = true;
+        }
     });
     addEvent("change", document.getElementById("volume"), volChangeFunc);
     addEvent("input", document.getElementById("volume"), volChangeFunc);
@@ -286,6 +282,8 @@ function registerDefaultSettings() {
     else {
         IodineGUI.defaults.volume = +findValue("volume");
     }
+    document.getElementById("volume").value = Math.round(IodineGUI.defaults.volume * 100);
+    document.getElementById("speedset").value = 50;
     if (findValue("skipBoot") === null) {
         setValue("skipBoot", !!IodineGUI.defaults.skipBoot);
     }
@@ -532,6 +530,11 @@ function volChangeFunc() {
     setValue("volume", +volume);
     IodineGUI.mixerInput.setVolume(+volume);
 };
+function speedChangeFunc() {
+    var speed = Math.min(Math.max(parseInt(this.value), 0), 100) / 50;
+    speed = speed * speed;
+    IodineGUI.Iodine.setSpeed(+speed);
+}
 function writeRedTemporaryText(textString) {
     if (IodineGUI.GUITimerID) {
         clearTimeout(IodineGUI.GUITimerID);

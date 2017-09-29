@@ -59,6 +59,11 @@ GfxGlueCode.prototype.attachGfxCallback = function (gfxCallback) {
         this.gfxCallback = gfxCallback;
     }
 }
+GfxGlueCode.prototype.attachGfxPostCallback = function (gfxPostCallback) {
+    if (typeof gfxPostCallback == "function") {
+        this.gfxPostCallback = gfxPostCallback;
+    }
+}
 GfxGlueCode.prototype.vsync = function () {
     if (this.graphicsFound) {
         if (typeof this.gfxCallback == "function") {
@@ -168,6 +173,10 @@ GfxGlueCode.prototype.requestDraw = function () {
         }
         this.swizzledFrameFree.push(swizzledFrame);
         this.graphicsBlit();
+        if (typeof this.gfxPostCallback == "function") {
+            //Some UI element redraw:
+            this.gfxPostCallback();
+        }
     }
 }
 GfxGlueCode.prototype.graphicsBlit = function () {

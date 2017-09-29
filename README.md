@@ -1,7 +1,7 @@
 JavaScript GameBoy Advance Emulator
 =================================
 
-**Copyright (C) 2010 - 2016 Grant Galitz**
+**Copyright (C) 2010 - 2017 Grant Galitz**
 
 A GameBoy Advance emulator that utilizes HTML5 canvas and JavaScript audio APIs to provide a full emulation of the console.
 
@@ -12,28 +12,6 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
-Voice Interface
---------------------------------------------------------------------
-Voice Interface added by Jeff Zhang@JeffZhang02747
-To control GameBoy through voice, You have to allow this page to access microphone first.
-
-voice command to press a button:
-    press/push (the) button/key [button_name]
-    word in the bracket is optional
-
-    example:
-        push key left
-
-voice command to control speed/volume:
-    increase/up/decrease/down (the) volume/speed
-    increase/up/decrease/down (the) volume/speed by [amount]
-    set/move/get (the) volume/speed to [amount]
-
-    example:
-        up the volume
-
 
 
 Screenshots

@@ -19,6 +19,7 @@ var IodineGUI = {
     isPlaying:false,
     startTime:(+(new Date()).getTime()),
     mixerInput:null,
+    currentSpeed:[false,0],
     defaults:{
         timerRate:16,
         sound:true,
@@ -54,13 +55,13 @@ var IodineGUI = {
         keyZonesControl:[
             //Use this to control the emulator function key mapping:
             //Volume Down:
-            56,
-            //Volume Up:
             55,
+            //Volume Up:
+            56,
             //Speed Up:
-            51,
-            //Slow Down:
             52,
+            //Slow Down:
+            51,
             //Reset Speed:
             53,
             //Toggle Fullscreen:
@@ -135,6 +136,12 @@ function registerBlitterHandler() {
     IodineGUI.Blitter = new GfxGlueCode(240, 160);
     IodineGUI.Blitter.attachCanvas(document.getElementById("emulator_target"));
     IodineGUI.Iodine.attachGraphicsFrameHandler(IodineGUI.Blitter);
+    IodineGUI.Blitter.attachGfxPostCallback(function () {
+        if (IodineGUI.currentSpeed[0]) {
+            var speedDOM = document.getElementById("speed");
+            speedDOM.textContent = "Speed: " + IodineGUI.currentSpeed[1] + "%";
+        }
+    });
 }
 function registerAudioHandler() {
     var Mixer = new GlueCodeMixer();
