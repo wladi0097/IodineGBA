@@ -27,7 +27,7 @@ var IodineGUI = {
         toggleSmoothScaling:true,
         toggleDynamicSpeed:false,
         toggleOffthreadGraphics:true,
-        toggleOffthreadCPU:(navigator.userAgent.indexOf('AppleWebKit') == -1),
+        toggleOffthreadCPU:(navigator.userAgent.indexOf('AppleWebKit') == -1 || (navigator.userAgent.indexOf('Windows NT 10.0') != -1 && navigator.userAgent.indexOf('Trident') == -1)),
         keyZonesGBA:[
             //Use this to control the GBA key mapping:
             //A:
