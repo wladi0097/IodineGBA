@@ -184,12 +184,17 @@ function refreshStorageListing() {
 }
 function checkStorageLength() {
     try {
-        return window.localStorage.length;
+        if (window.localStorage) {
+            return window.localStorage.length;
+        }
     }
     catch (error) {
         //An older Gecko 1.8.1/1.9.0 method of storage (Deprecated due to the obvious security hole):
-        return window.globalStorage[location.hostname].length;
+        if (window.globalStorage && location.hostname) {
+            return window.globalStorage[location.hostname].length;
+        }
     }
+    return 0;
 }
 function getSavesKeys() {
     var storageLength = checkStorageLength();
@@ -211,11 +216,15 @@ function getSavesKeys() {
 }
 function findKey(keyNum) {
     try {
-        return window.localStorage.key(keyNum);
+        if (window.localStorage) {
+            return window.localStorage.key(keyNum);
+        }
     }
     catch (error) {
         //An older Gecko 1.8.1/1.9.0 method of storage (Deprecated due to the obvious security hole):
-        return window.globalStorage[location.hostname].key(keyNum);
+        if (window.globalStorage && location.hostname) {
+            return window.globalStorage[location.hostname].key(keyNum);
+        }
     }
     return null;
 }
@@ -232,14 +241,18 @@ function to_byte(str) {
 function findValue(key) {
     key = "IodineGBA_" + key;
     try {
-        if (window.localStorage.getItem(key) != null) {
-            return JSON.parse(window.localStorage.getItem(key));
+        if (window.localStorage) {
+            if (window.localStorage.getItem(key) != null) {
+                return JSON.parse(window.localStorage.getItem(key));
+            }
         }
     }
     catch (error) {
         //An older Gecko 1.8.1/1.9.0 method of storage (Deprecated due to the obvious security hole):
-        if (window.globalStorage[location.hostname].getItem(key) != null) {
-            return JSON.parse(window.globalStorage[location.hostname].getItem(key));
+        if (window.globalStorage && location.hostname) {
+            if (window.globalStorage[location.hostname].getItem(key) != null) {
+                return JSON.parse(window.globalStorage[location.hostname].getItem(key));
+            }
         }
     }
     return null;
@@ -248,21 +261,29 @@ function findValue(key) {
 function setValue(key, value) {
     key = "IodineGBA_" + key;
     try {
-        window.localStorage.setItem(key, JSON.stringify(value));
+        if (window.localStorage) {
+            window.localStorage.setItem(key, JSON.stringify(value));
+        }
     }
     catch (error) {
         //An older Gecko 1.8.1/1.9.0 method of storage (Deprecated due to the obvious security hole):
-        window.globalStorage[location.hostname].setItem(key, JSON.stringify(value));
+        if (window.globalStorage && location.hostname) {
+            window.globalStorage[location.hostname].setItem(key, JSON.stringify(value));
+        }
     }
 }
 //Wrapper for localStorage removeItem, so that data can be set in various types.
 function deleteValue(key) {
     key = "IodineGBA_" + key;
     try {
-        window.localStorage.removeItem(key);
+        if (window.localStorage) {
+            window.localStorage.removeItem(key);
+        }
     }
     catch (error) {
         //An older Gecko 1.8.1/1.9.0 method of storage (Deprecated due to the obvious security hole):
-        window.globalStorage[location.hostname].removeItem(key);
+        if (window.globalStorage && location.hostname) {
+            window.globalStorage[location.hostname].removeItem(key);
+        }
     }
 }
