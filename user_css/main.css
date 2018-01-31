@@ -4,6 +4,10 @@
 |-----------------------------------------
  */
 
+ .hide {
+   display: none !important;
+ }
+
 html, body {
     font-family: Open Sans, Arial, sans-serif;
     height: 100%;
@@ -46,7 +50,7 @@ ul{
 | Canvas
 |-----------------------------------------
 |
-| Classes are automatically overwritten 
+| Classes are automatically overwritten
 | by the filter styles, therefore only
 | attributes and id's can be used.
 |
@@ -226,9 +230,15 @@ li.hide {
         display: none;
     }
     #main {
-        display: flex;
+      display: block;
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      left: 0;
+      top: 0;
+        /*display: flex;
         justify-content: center;
         flex-grow: 1;
-        align-items: center;
+        align-items: center;*/
     }
 }

@@ -552,12 +552,12 @@ function resizeCanvasFunc() {
     var containerWidth = container.clientWidth || container.offsetWidth || 0;
     if (containerHeight > 0 && containerWidth > 0) {
         var canvas = document.getElementById("emulator_target");
-        var maxWidth = Math.floor(containerHeight * 1.5);
-        var maxHeight = Math.floor(containerWidth / 1.5);
-        var height = Math.min(maxHeight, containerHeight);
-        var width = Math.min(maxWidth, containerWidth);
-        canvas.style.width = width + "px";
-        canvas.style.height = height + "px";
+        // var maxWidth = Math.floor(containerHeight * 1.5);
+        // var maxHeight = Math.floor(containerWidth / 1.5);
+        // var height = Math.min(maxHeight, containerHeight);
+        // var width = Math.min(maxWidth, containerWidth);
+        canvas.style.width = "100%";
+        canvas.style.height = "100%";
     }
 }
 function rebuildSavesMenu(e) {
