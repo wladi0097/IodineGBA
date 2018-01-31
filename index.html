@@ -65,11 +65,55 @@
         <script src="user_scripts/XAudioJS/swfobject.js"></script>
         <script src="user_scripts/XAudioJS/resampler.js"></script>
         <script src="user_scripts/XAudioJS/XAudioServer.js"></script>
+        <script src="user_scripts/customGui.js"></script>
         <link rel="stylesheet" href="user_css/main.css">
+        <link rel="stylesheet" href="user_css/switch.css">
     </head>
     <body>
+        <div id="customGui" class="switch_Start">
+
+          <div class="switch_init">
+            <div class="item">
+              <img src="user_css/bios.svg" alt="" />
+              <button class="active" type="button" name="button" id="addBios">Select Bios</button>
+            </div>
+            <div class="delimiter">
+              <div class="line">
+
+              </div>
+            </div>
+            <div class="item">
+              <img src="user_css/game.svg" alt="" />
+              <button type="button" name="button" id="addGame">Select Game</button>
+            </div>
+            <div class="delimiter">
+              <div class="line">
+
+              </div>
+            </div>
+            <div class="item">
+              <img src="user_css/start.svg" alt="" />
+              <button type="button" name="button" id="startEmulator">Start Emulator</button>
+            </div>
+          </div>
+
+          <div class="switch_input">
+            <div class="input_bios">
+              <input id="biosInput" name="name" placeholder="URL to Bios">
+              <div class="fill">
+
+              </div>
+            </div>
+            <div class="input_game">
+              <input id="gameInput" name="name" placeholder="URL to Game">
+              <div class="fill">
+
+              </div>
+            </div>
+          </div>
+        </div>
         <div id="container">
-            <div id="menu" class="paused">
+            <div id="menu" class="paused hide">
                 <ul class="menu" id="menu_top">
                     <li>
                         File
@@ -205,9 +249,9 @@
                 </ul>
             </div>
             <div id="main">
-                <canvas class="canvas" id="emulator_target" width="240" height="160"></canvas>
+                <canvas class="canvas" id="emulator_target"></canvas>
             </div>
-            <div class="touch-controls">
+            <div class="touch-controls hide">
                 <div class="touch-dpad">
                     <button id="touch-up">↑</button><br>
                     <button id="touch-left">←</button>
@@ -215,7 +259,7 @@
                     <button id="touch-down">↓</button>
                 </div>
                 <div class="touch-buttons">
-                    <button id="touch-select">SELECT</button> 
+                    <button id="touch-select">SELECT</button>
                     <button id="touch-start">START</button>
                 </div>
                 <div class="touch-buttons">
@@ -225,7 +269,7 @@
                     <button id="touch-r">R</button>
                 </div>
             </div>
-            <span class="message" id="tempMessage"></span>
+            <span class="message hide" id="tempMessage"></span>
         </div>
     </body>
 </html>
