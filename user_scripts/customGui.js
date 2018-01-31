@@ -10,6 +10,8 @@ var customGui = {
     this.$biosInput = document.getElementById('biosInput')
     this.$game = document.getElementById('addGame')
     this.$gameInput = document.getElementById('gameInput')
+    this.$gameAdd = document.getElementById('gameAdded')
+    this.$biosAdd = document.getElementById('biosAdded')
     this.$start = document.getElementById('startEmulator')
   },
 
@@ -21,11 +23,8 @@ var customGui = {
       }, 100);
     })
 
-    this.$biosInput.addEventListener('change', this.addBios)
-    this.$biosInput.addEventListener('keyup', (e) => {
-      if(e.key === 'Enter') {
+    this.$biosAdd.addEventListener('mousedown', (e) => {
         this.addBios()
-      }
     })
 
     this.$game.addEventListener('mousedown', () => {
@@ -37,11 +36,8 @@ var customGui = {
       }
     })
 
-    this.$gameInput.addEventListener('change', this.addGame)
-    this.$gameInput.addEventListener('keyup', (e) => {
-      if(e.key === 'Enter') {
+    this.$gameAdd.addEventListener('mousedown', (e) => {
         this.addGame()
-      }
     })
 
     this.$start.addEventListener('mousedown', () => {
