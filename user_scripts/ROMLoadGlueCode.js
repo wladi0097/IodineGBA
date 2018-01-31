@@ -10,9 +10,11 @@
  */
 function attachBIOS(BIOS) {
     try {
+		console.log(new Uint8Array(BIOS))
         IodineGUI.Iodine.attachBIOS(new Uint8Array(BIOS));
     }
     catch (error) {
+		console.log(error)
         IodineGUI.Iodine.attachBIOS(BIOS);
     }
 }
@@ -21,6 +23,7 @@ function attachROM(ROM) {
         IodineGUI.Iodine.attachROM(new Uint8Array(ROM));
     }
     catch (error) {
+		console.log(error)
         IodineGUI.Iodine.attachROM(ROM);
     }
 }
@@ -57,6 +60,25 @@ function fileLoadBIOS() {
 function fileLoadROM() {
     fileLoadShimCode(this.files, attachROM);
 }
+
+function downloadVendorFile(url, attach) {
+    var ajax = new XMLHttpRequest();
+    ajax.onload = function(){
+      if (ajax.status >= 200 && ajax.status < 400) { 
+		attach(ajax.response)
+      } else {
+        console.log(ajax.status)
+      }
+    }
+	ajax.onerror = function (e) {
+		console.log(e)
+	}
+    ajax.open("GET", url, true);
+    ajax.responseType = "arraybuffer";
+    ajax.overrideMimeType("text/plain; charset=x-user-defined");
+    ajax.send(null);
+}
+
 function downloadFile(fileName, registrationHandler) {
     var ajax = new XMLHttpRequest();
     ajax.onload = registrationHandler;
