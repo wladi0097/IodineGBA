@@ -60,15 +60,18 @@ GameBoyAdvanceEmulator.prototype.generateCoreExposed = function () {
     }
 }
 GameBoyAdvanceEmulator.prototype.play = function () {
+  console.log('emulatorStatus : ' + this.emulatorStatus);
     if ((this.emulatorStatus | 0) >= 0x10) {
         this.emulatorStatus = this.emulatorStatus & 0xF;
         if ((this.emulatorStatus & 0x1) == 0 && this.BIOS && this.ROM) {
             if ((this.initializeCore() | 0) == 0) {
+              console.log('failed to initialize');
                 //Failure to initialize:
                 this.pause();
                 return;
             }
             this.importSave();
+            console.log('initialized and try to import save');
         }
         this.invalidateMetrics();
         this.setBufferSpace();

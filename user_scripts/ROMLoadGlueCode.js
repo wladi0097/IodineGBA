@@ -10,7 +10,7 @@
  */
 function attachBIOS(BIOS) {
     try {
-		console.log(new Uint8Array(BIOS))
+      console.log('bios found ' + BIOS);
         IodineGUI.Iodine.attachBIOS(new Uint8Array(BIOS));
     }
     catch (error) {
@@ -20,6 +20,7 @@ function attachBIOS(BIOS) {
 }
 function attachROM(ROM) {
     try {
+      console.log('game found ' + BIOS);
         IodineGUI.Iodine.attachROM(new Uint8Array(ROM));
     }
     catch (error) {
@@ -64,7 +65,7 @@ function fileLoadROM() {
 function downloadVendorFile(url, attach) {
     var ajax = new XMLHttpRequest();
     ajax.onload = function(){
-      if (ajax.status >= 200 && ajax.status < 400) { 
+      if (ajax.status >= 200 && ajax.status < 400) {
 		attach(ajax.response)
       } else {
         console.log(ajax.status)

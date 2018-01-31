@@ -24,6 +24,7 @@ var customGui = {
     })
 
     this.$biosAdd.addEventListener('mousedown', (e) => {
+      console.log('add bios')
         this.addBios()
     })
 
@@ -37,11 +38,13 @@ var customGui = {
     })
 
     this.$gameAdd.addEventListener('mousedown', (e) => {
+      console.log('add game')
         this.addGame()
     })
 
     this.$start.addEventListener('mousedown', () => {
       if (this.$start.allow) {
+        console.log('start emulator')
         this.$full.classList.add('hideGui')
         IodineGUI.Iodine.play()
       }
