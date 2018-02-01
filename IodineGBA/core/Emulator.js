@@ -71,19 +71,22 @@ GameBoyAdvanceEmulator.prototype.play = function () {
                 return;
             }
             this.importSave();
-            console.log('initialized and try to import save');
         }
         this.invalidateMetrics();
         this.setBufferSpace();
         //Report new status back:
+        console.log('play');
         this.playStatusCallback(1);
     }
+    console.log('emulatorStatus : ' + this.emulatorStatus);
 }
 GameBoyAdvanceEmulator.prototype.pause = function () {
+  console.log('emulatorStatus : ' + this.emulatorStatus);
     if ((this.emulatorStatus | 0) < 0x10) {
         this.exportSave();
         this.emulatorStatus = this.emulatorStatus | 0x10;
         //Report new status back:
+        console.log('pause');
         this.playStatusCallback(0);
     }
 }
@@ -101,6 +104,7 @@ GameBoyAdvanceEmulator.prototype.restart = function () {
             this.pause();
             return;
         }
+        console.log('restart');
         this.importSave();
         this.audioUpdateState = 1;
         this.processNewSpeed(1);
@@ -176,7 +180,9 @@ GameBoyAdvanceEmulator.prototype.attachBIOS = function (BIOS) {
 }
 GameBoyAdvanceEmulator.prototype.getGameName = function () {
     if ((this.emulatorStatus & 0x3) == 0x1) {
-        return this.IOCore.cartridge.name;
+      var name = this.IOCore.cartridge.name
+        console.log('game name: ' + name)
+        return name;
     }
     else {
         return "";
@@ -203,6 +209,7 @@ GameBoyAdvanceEmulator.prototype.attachPlayStatusHandler = function (handler) {
     }
 }
 GameBoyAdvanceEmulator.prototype.importSave = function () {
+  console.log('import save');
     if (this.saveImportHandler) {
         var name = this.getGameName();
         if (name != "") {
@@ -237,6 +244,7 @@ GameBoyAdvanceEmulator.prototype.importSave = function () {
     this.emulatorStatus = this.emulatorStatus | 0x4;
 }
 GameBoyAdvanceEmulator.prototype.exportSave = function () {
+  console.log('export save');
     if (this.saveExportHandler && (this.emulatorStatus & 0x3) == 0x1) {
         var save = this.IOCore.saves.exportSave();
         var saveType = this.IOCore.saves.exportSaveType() | 0;
@@ -321,6 +329,7 @@ GameBoyAdvanceEmulator.prototype.calculateSpeedPercentage = function () {
     }
 }
 GameBoyAdvanceEmulator.prototype.initializeCore = function () {
+    console.log('initialize core')
     //Wrap up any old internal instance callbacks:
     this.runTerminationJobs();
     //Setup a new instance of the i/o core:
@@ -358,6 +367,7 @@ GameBoyAdvanceEmulator.prototype.enableAudio = function () {
         this.audioFound = 1;    //Set audio to 'found' by default.
         //Attempt to enable audio:
         var parentObj = this;
+        console.log('initialize audio')
         this.audio.initialize(2, (this.clocksPerSecond | 0) / (this.audioResamplerFirstPassFactor | 0), Math.max((+this.clocksPerMilliSecond) * (this.settings.audioBufferSize | 0) / (this.audioResamplerFirstPassFactor | 0), 4) | 0, function () {
                 //Not needed
             }, function () {
@@ -371,12 +381,14 @@ GameBoyAdvanceEmulator.prototype.enableAudio = function () {
 }
 GameBoyAdvanceEmulator.prototype.disableAudio = function () {
     if ((this.audioFound | 0) != 0) {
+      console.log('disable audio')
         this.audio.unregister();
         this.audioFound = 0;
     }
 }
 GameBoyAdvanceEmulator.prototype.reinitializeAudio = function () {
     if ((this.audioFound | 0) != 0) {
+      console.log('reinitialize audio')
         this.disableAudio();
         this.enableAudio();
     }

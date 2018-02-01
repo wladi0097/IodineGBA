@@ -20,7 +20,7 @@ function attachBIOS(BIOS) {
 }
 function attachROM(ROM) {
     try {
-      console.log('game found ' + BIOS);
+      console.log('game found ' + ROM);
         IodineGUI.Iodine.attachROM(new Uint8Array(ROM));
     }
     catch (error) {
@@ -68,11 +68,11 @@ function downloadVendorFile(url, attach) {
       if (ajax.status >= 200 && ajax.status < 400) {
 		attach(ajax.response)
       } else {
-        console.log(ajax.status)
+        console.log('download error:' + ajax.status)
       }
     }
 	ajax.onerror = function (e) {
-		console.log(e)
+		console.log('download error:' + e)
 	}
     ajax.open("GET", url, true);
     ajax.responseType = "arraybuffer";
